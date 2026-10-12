@@ -11,16 +11,12 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
-# =====================================================================
-# 1. CONFIGURACIÓN E INTERFAZ BASE DE STREAMLIT
-# =====================================================================
-st.set_page_config(page_title="Sistema Híbrido Logístico", layout="wide")
+# interfaz - streamlit
+st.set_page_config(page_title="Sistema Logístico", layout="wide")
 st.title("Priorización de Pedidos y Optimización Logística")
 st.markdown("---")
 
-# =====================================================================
-# 2. MOTOR LÓGICA DIFUSA (MAMDANI)
-# =====================================================================
+# logica difusa - mamdani
 resolucion = 1000
 u_urgencia = np.linspace(0, 10, resolucion)
 u_retraso = np.linspace(0, 72, resolucion)
@@ -95,9 +91,7 @@ def evaluar_sistema_difuso(urg, ret, imp):
     centroide = np.sum(u_prioridad * curva_agregada) / suma_mu if suma_mu > 0 else 50.0
     return centroide, curva_agregada
 
-# =====================================================================
-# 3. MOTOR ALGORITMO GENÉTICO
-# =====================================================================
+# algoritmo genetico
 proyectos_costos = np.array([6500, 2800, 1800, 4500, 7000, 3200, 5000, 2200], dtype=np.float64)
 proyectos_beneficios = np.array([18, 8, 6, 12, 19, 10, 14, 7], dtype=np.float64)
 PRESUPUESTO_MAX = 17000.0
@@ -147,15 +141,13 @@ def ejecutar_ag(pop_size, pc, pm, max_gen, seed):
     idx_optimo = np.argmax(fitness_final)
     return poblacion[idx_optimo], fitness_final[idx_optimo], historial_mejor
 
-# =====================================================================
-# 4. MAQUETACIÓN DE PESTAÑAS Y CONTROLES
-# =====================================================================
+# parametros y grafica
 tab1, tab2 = st.tabs(["Lógica Difusa", "Algoritmo Genético"])
 
 with tab1:
     col1_dif, col2_dif = st.columns(2)
     with col1_dif:
-        st.subheader("🎛️ Variables de Entrada de Pedidos")
+        st.subheader("Variables de Entrada de Pedidos")
         urg = st.slider("Urgencia del Pedido (X1)", 0.0, 10.0, 5.0, step=0.1)
         ret = st.slider("Retraso Acumulado en Horas (X2)", 0.0, 72.0, 24.0, step=1.0)
         imp = st.slider("Importancia del Cliente (X3)", 0.0, 100.0, 50.0, step=1.0)
